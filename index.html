@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Surprise For You • Tayeba</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #030303;
+  --gold: #e5c586;
+  --soft: #f8edcf;
+  --muted: #a49373;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  color: var(--soft);
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+body { overflow: hidden; }
+
+#stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.04);
+  transition: opacity .9s ease, transform 1s ease, visibility .9s;
+}
+
+.screen.active {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.wrap {
+  width: min(1050px, 94vw);
+  text-align: center;
+}
+
+.panel {
+  padding: 52px 30px;
+  border: 1px solid #b28c4b55;
+  border-radius: 28px;
+  background: linear-gradient(145deg, #14110bdd, #060606ee);
+  box-shadow: 0 30px 100px #000, inset 0 0 70px #d4aa5810;
+  backdrop-filter: blur(14px);
+}
+
+.serif { font-family: "Cormorant Garamond", Georgia, serif; }
+
+.kicker {
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: .45em;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(48px, 8vw, 100px);
+  line-height: .9;
+  letter-spacing: .07em;
+  margin: 0;
+  background: linear-gradient(110deg, #9d773d, #fff1c4, #c39b55);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.count {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 35px 0;
+}
+
+.unit {
+  min-width: 95px;
+  padding: 16px 10px;
+  border: 1px solid #775d35;
+  border-radius: 16px;
+  background: #070706cc;
+}
+
+.num {
+  font: 600 38px "Cormorant Garamond", serif;
+  color: #f2d79f;
+}
+
+.lab {
+  font-size: 8px;
+  letter-spacing: .25em;
+  color: #9b8968;
+}
+
+.btn {
+  border: 1px solid #a27e43;
+  border-radius: 999px;
+  padding: 15px 32px;
+  background: linear-gradient(145deg, #211a0f, #070707);
+  color: #f2d69b;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: .35s;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px #b9924a33;
+}
+
+input {
+  width: min(380px, 90%);
+  padding: 16px;
+  border: 1px solid #765a32;
+  border-radius: 999px;
+  background: #050505;
+  color: #fff;
+  text-align: center;
+  outline: none;
+  letter-spacing: .18em;
+  font-size: 14px;
+}
+
+.error {
+  height: 18px;
+  margin-top: 12px;
+  color: #ba7e7e;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+/* Cake & Candles */
+.cakeArea {
+  height: 290px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cake {
+  width: 260px;
+  height: 190px;
+  position: relative;
+  filter: drop-shadow(0 25px 25px #000);
+  transition: .8s;
+}
+
+.plate {
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  width: 260px;
+  height: 25px;
+  border-radius: 50%;
+  background: linear-gradient(#e2c78d, #73562b);
+}
+
+.body {
+  position: absolute;
+  left: 28px;
+  top: 70px;
+  width: 204px;
+  height: 85px;
+  border-radius: 20px 20px 28px 28px;
+  background: linear-gradient(110deg, #4b3018, #bd8843, #4b3018);
+  box-shadow: inset 0 10px 16px #fff4cf22;
+}
+
+.top {
+  position: absolute;
+  left: 28px;
+  top: 47px;
+  width: 204px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #f8e0ad, #936835 70%);
+}
+
+.cream {
+  position: absolute;
+  left: 45px;
+  top: 91px;
+  width: 170px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f2dfb8;
+}
+
+.drip {
+  position: absolute;
+  top: 95px;
+  width: 16px;
+  height: 38px;
+  border-radius: 0 0 12px 12px;
+  background: #f2dfb8;
+}
+.dr1 { left: 70px; }
+.dr2 { left: 118px; height: 50px; }
+.dr3 { left: 160px; height: 28px; }
+
+.candles {
+  position: absolute;
+  top: 0;
+  left: 73px;
+  display: flex;
+  gap: 28px;
+}
+
+.candle {
+  width: 12px;
+  height: 62px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #9b7237, #fff0bd, #a67a3e);
+  position: relative;
+}
+
+.flame {
+  position: absolute;
+  top: -24px;
+  left: 1px;
+  width: 11px;
+  height: 20px;
+  border-radius: 50% 50% 50% 10%;
+  background: #ffd16d;
+  transform: rotate(45deg);
+  box-shadow: 0 0 25px #ffb62f;
+  animation: flicker .22s infinite alternate;
+}
+
+@keyframes flicker {
+  to { transform: rotate(40deg) scale(1.1); }
+}
+
+.cake.cut { transform: scale(.88); }
+.cake.cut .body { clip-path: polygon(0 0, 46% 0, 46% 100%, 0 100%); }
+.cake.cut .top { transform: translateX(25px) rotate(3deg); }
+
+/* Gift Scene */
+.giftScene {
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gift {
+  width: 230px;
+  height: 190px;
+  position: relative;
+  cursor: pointer;
+  filter: drop-shadow(0 35px 30px #000);
+  transition: .6s;
+}
+
+.gift:hover {
+  transform: translateY(-10px) rotateY(6deg);
+}
+
+.box {
+  position: absolute;
+  left: 25px;
+  bottom: 0;
+  width: 180px;
+  height: 130px;
+  border: 1px solid #c8a05d88;
+  background: linear-gradient(135deg, #17110a, #8c6734, #21170c);
+}
+
+.lid {
+  position: absolute;
+  left: 15px;
+  top: 30px;
+  width: 200px;
+  height: 42px;
+  border: 1px solid #d9b46b99;
+  background: linear-gradient(135deg, #251b0e, #b08a4b, #271d10);
+  transform: rotate(-2deg);
+}
+
+.rv {
+  position: absolute;
+  left: 100px;
+  top: 0;
+  width: 28px;
+  height: 190px;
+  background: linear-gradient(90deg, #a77b3b, #fff0bd, #a77b3b);
+  opacity: .8;
+}
+
+.rh {
+  position: absolute;
+  left: 0;
+  top: 76px;
+  width: 230px;
+  height: 25px;
+  background: linear-gradient(#a77b3b, #fff0bd, #a77b3b);
+  opacity: .75;
+}
+
+/* Tayeba Profile Section */
+.girl {
+  font-size: 110px;
+  display: inline-block;
+  animation: float 3.2s ease-in-out infinite;
+  filter: drop-shadow(0 25px 25px #000);
+}
+
+@keyframes float {
+  50% { transform: translateY(-11px); }
+}
+
+.name {
+  font: 600 55px "Cormorant Garamond", serif;
+  letter-spacing: .3em;
+  color: var(--gold);
+}
+
+/* Letter Section */
+.letter {
+  width: min(850px, 94vw);
+  max-height: 64vh;
+  overflow-y: auto;
+  text-align: left;
+  padding: 38px;
+  border: 1px solid #9d7b4855;
+  border-radius: 22px;
+  background: #0b0907;
+  box-shadow: inset 0 0 70px #d2a65309;
+}
+
+.letter p {
+  font: 19px/1.7 "Cormorant Garamond", Georgia, serif;
+  color: #eadfc7;
+  margin: 0 0 16px;
+}
+
+.letter::-webkit-scrollbar { width: 4px; }
+.letter::-webkit-scrollbar-thumb { background: #765b35; border-radius: 10px; }
+
+.wish {
+  max-width: 760px;
+  margin: 25px auto;
+  font: 24px/1.6 "Cormorant Garamond", Georgia, serif;
+  color: #eadcbd;
+}
+
+.orb {
+  width: 140px;
+  height: 140px;
+  border: 1px solid #cba45e;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  font-size: 45px;
+  box-shadow: 0 0 80px #c0954938;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  50% { transform: scale(1.04); box-shadow: 0 0 110px #c0954960; }
+}
+
+@media(max-width:600px) {
+  .panel { padding: 35px 18px; }
+  .unit { min-width: 70px; padding: 12px 6px; }
+  .num { font-size: 28px; }
+  .cakeArea { transform: scale(.82); }
+  .giftScene { transform: scale(.82); }
+  .letter { padding: 22px; }
+  .letter p { font-size: 17px; }
+  .wish { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<!-- 1. Countdown Screen -->
+<section id="count" class="screen active">
+  <div class="wrap">
+    <h1 class="title">A SURPRISE<br>FOR YOU</h1>
+    <div class="count">
+      <div class="unit"><div id="dd" class="num">00</div><div class="lab">DAYS</div></div>
+      <div class="unit"><div id="hh" class="num">00</div><div class="lab">HOURS</div></div>
+      <div class="unit"><div id="mm" class="num">00</div><div class="lab">MINUTES</div></div>
+      <div class="unit"><div id="ss" class="num">00</div><div class="lab">SECONDS</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Ready Screen -->
+<section id="ready" class="screen">
+  <div class="wrap panel">
+    <div class="kicker">The wait is over</div>
+    <h1 class="title" style="font-size:clamp(42px,7vw,82px)">YOUR SURPRISE<br>IS READY</h1><br>
+    <button class="btn" onclick="show('password')">Open Your Surprise</button>
+  </div>
+</section>
+
+<!-- 3. Password Screen -->
+<section id="password" class="screen">
+  <div class="wrap panel">
+    <div class="kicker">Private Surprise</div>
+    <h2 class="serif" style="font-size:42px; margin:0">A little secret first…</h2><br>
+    <input id="pw" type="password" placeholder="PASSWORD"><br>
+    <button class="btn" style="margin-top:20px" onclick="unlock()">Unlock</button>
+    <div id="err" class="error"></div>
+  </div>
+</section>
+
+<!-- 4. Cake Cutting Screen -->
+<section id="cakeSec" class="screen">
+  <div class="wrap panel">
+    <div class="kicker">Make a wish</div>
+    <div class="cakeArea">
+      <div class="cake" id="cake">
+        <div class="plate"></div>
+        <div class="body"></div>
+        <div class="top"></div>
+        <div class="cream"></div>
+        <div class="drip dr1"></div>
+        <div class="drip dr2"></div>
+        <div class="drip dr3"></div>
+        <div class="candles" id="candles">
+          <div class="candle"><i class="flame"></i></div>
+          <div class="candle"><i class="flame"></i></div>
+          <div class="candle"><i class="flame"></i></div>
+        </div>
+      </div>
+    </div>
+    <h2 class="serif" style="font-size:30px">Before you blow the candles, make a wish.</h2><br>
+    <button id="blow" class="btn" onclick="blow()">Blow the Candles</button>
+    <button id="cut" class="btn" style="display:none" onclick="cut()">Cut the Cake</button>
+  </div>
+</section>
+
+<!-- 5. Gift Box Screen -->
+<section id="giftSec" class="screen">
+  <div class="wrap">
+    <div class="kicker">Something is waiting inside</div>
+    <div class="giftScene">
+      <div class="gift" onclick="show('girlSec')">
+        <div class="lid"></div>
+        <div class="box"></div>
+        <div class="rv"></div>
+        <div class="rh"></div>
+      </div>
+    </div>
+    <h2 class="serif" style="font-size:40px">A GIFT FROM TAYEBA</h2>
+    <div class="kicker" style="margin-top:10px">Click the box</div>
+  </div>
+</section>
+
+<!-- 6. Tayeba Profile Screen -->
+<section id="girlSec" class="screen">
+  <div class="wrap panel">
+    <div class="girl">👩🏻‍🦱</div>
+    <div class="kicker">From the girl behind this surprise</div>
+    <div class="name">TAYEBA</div>
+    <p style="color:#b9a988; margin-bottom:25px;">I brought you something more precious than a gift.</p>
+    <button class="btn" onclick="show('letterSec')">Take My Letter</button>
+  </div>
+</section>
+
+<!-- 7. Emotional Letter Screen -->
+<section id="letterSec" class="screen">
+  <div class="wrap">
+    <div class="kicker">From My Heart</div>
+    <div class="letter">
+      <p>My Love,</p>
+      <p>Happy Birthday. ❤️</p>
+      <p>I don't really know where to start, because whenever I try to put what you mean to me into words, it always feels like the words are too small.</p>
+      <p>Sometimes I just sit and think about us, and honestly… I still can't believe I got you.</p>
+      <p>I never thought someone would come into my life and love me the way you do. Someone who would care about the smallest things, notice my little changes, listen to my nonsense, tolerate my childishness, handle my mood swings, and still somehow make me feel loved even when I'm not being the easiest person to love.</p>
+      <p>But you do. And maybe you don't realize how much that means to me.</p>
+      <p>You've seen so many different versions of me. The happy me, the emotional me, the annoying me, the childish me, the overthinking me, the quiet me… and instead of walking away, you stayed and tried to understand every single one.</p>
+      <p>That's something I'll never take for granted.</p>
+      <p>You became the person I look for when something good happens, and the person I want when something hurts.</p>
+      <p>You've been there in my good times and my bad times, and even when you couldn't fix what I was going through, just knowing that you were there somehow made everything feel a little easier.</p>
+      <p>And now it's your turn to go through a difficult chapter.</p>
+      <p>I know you're struggling right now. I know you're trying to figure things out, build yourself, work for your future, and become the person you want to be.</p>
+      <p>And I want you to know that I'm not going anywhere because of that.</p>
+      <p>So please, don't ever feel guilty for being busy. Don't think that because you're focusing on your life, your dreams, or your struggles, you're giving me less love.</p>
+      <p>Go. Focus on yourself. Build your future. Work hard. Chase everything you've ever wanted.</p>
+      <p>I'll understand. I'll wait. I'll be here.</p>
+      <p>I don't need you to be available every minute to know that you love me. I don't need constant attention to feel secure about us. Because I know you. And I know your heart.</p>
+      <p>I want to be the person who supports you while you're building your life, not the person who makes your life harder when you're already struggling.</p>
+      <p>If someday you're too tired to talk, I'll understand.<br>
+      If you're busy chasing your dreams, I'll be proud of you.<br>
+      If life gets difficult and you don't know what to do, you can still come to me.</p>
+      <p>You don't have to be strong all the time with me. You can be tired. You can be lost. You can have bad days. You can tell me when you're not okay.</p>
+      <p>I'll still be here.</p>
+      <p>Because I don't just want the version of you who has everything figured out. I want you—all of you. The man who is still growing. The man who is still struggling. The man who is still chasing his dreams. The man who sometimes doesn't know what comes next.</p>
+      <p>I want to see you become everything you've been working so hard to become. And when you finally get there, I hope you look back and remember that there was always someone quietly standing beside you, believing in you even on the days when you couldn't believe in yourself.</p>
+      <p>That person will be me.</p>
+      <p>Maybe we're far away from each other right now. Maybe I can't be beside you at midnight, hug you, hold your hand, or watch your face when you make your birthday wish.</p>
+      <p>And honestly, that's the part I hate the most about being away from you. Because if I could have one thing today, it wouldn't be a gift or anything expensive. I'd just want to be there. Beside you. That's all.</p>
+      <p>I want the ordinary things with you someday. I want to annoy you in person. I want to make you deal with my mood swings face-to-face. 😭 I want to laugh with you over stupid things. I want to sit beside you without needing a phone between us. I want to celebrate your birthdays next to you instead of through a screen.</p>
+      <p>And I want all these little dreams to become our normal life someday.</p>
+      <p>Until then, please remember this: You have me.</p>
+      <p>Through your good days. Through your bad days. Through your success. Through your failures. Through the days when everything feels perfect and the days when everything feels completely messed up.</p>
+      <p>I'm still your girl. I'm still on your side. And I'm still choosing you.</p>
+      <p>I feel so incredibly lucky that I found someone like you. And if life gave me the chance to choose again, knowing everything I know now… I'd still choose you. Without hesitation.</p>
+      <p>Thank you for loving me. Thank you for caring for me. Thank you for putting up with all my little childish things. Thank you for staying when I wasn't easy to understand. Thank you for making me feel like I have someone in this world who is truly mine.</p>
+      <p>I hope this birthday is the beginning of a better chapter for you. I hope the struggles you're facing now slowly turn into stories you'll someday tell with a smile. I hope you achieve everything you're working for.</p>
+      <p>And when you do, I hope I'll still be right there beside you, annoying you, loving you, and reminding you that I'm proud of the man you've become.</p>
+      <p>So today, on your birthday, I don't just wish you happiness. I wish you strength for the days you're struggling, peace for the days your mind feels heavy, courage for the dreams you're chasing, and a future that gives you every reason to smile.</p>
+      <p>And for us… I wish for the day when distance is nothing more than an old memory.</p>
+      <p>Until that day comes, I'll keep waiting. I'll keep believing. I'll keep loving you. And I'll keep standing beside you in every way I can.</p>
+      <p>Not just for today. Not just for the good days. But for as long as life lets me.</p>
+      <p>Happy Birthday, my husband. ❤️</p>
+      <p>You are one of the best things that ever happened to me. And I hope you never forget that somewhere in this world, there is a girl who feels incredibly lucky just because she gets to call you hers.</p>
+      <p>I love you. More than I can explain. More than this little letter could ever hold.</p>
+      <p>Forever yours,<br><b style="color:var(--gold)">Tayeba ❤️</b></p>
+    </div><br>
+    <button class="btn" onclick="show('wishSec')">Continue</button>
+  </div>
+</section>
+
+<!-- 8. Wishes Screen -->
+<section id="wishSec" class="screen">
+  <div class="wrap panel">
+    <div class="kicker">My Wish For You</div>
+    <h1 class="title" style="font-size:60px">YOUR NEXT CHAPTER</h1>
+    <div class="wish">
+      May your struggles become strength, your dreams become reality, and your future become everything you've worked for.<br><br>
+      May you always have reasons to smile, reasons to be proud, and reasons to believe in yourself.<br><br>
+      And may we get to celebrate countless birthdays together, side by side. ❤️
+    </div>
+    <button class="btn" onclick="show('finalSec')">One Last Thing…</button>
+  </div>
+</section>
+
+<!-- 9. Final Screen -->
+<section id="finalSec" class="screen">
+  <div class="wrap panel">
+    <div class="kicker">The final surprise</div>
+    <div class="orb">♡</div>
+    <h1 class="title" style="font-size:clamp(38px, 7vw, 80px)">DISTANCE IS<br>ONLY TEMPORARY.</h1>
+    <div class="wish">Someday, there won't be a screen between us. There won't be miles between us. There will just be you and me.</div>
+    <div style="margin:30px 0; letter-spacing:.45em; color:#c6a66e">✦ FOREVER YOURS — TAYEBA ✦</div>
+    <h2 class="serif" style="font-size:clamp(32px, 6vw, 60px); margin:0; color:#f2d99f">HAPPY BIRTHDAY, MY LOVE ❤️</h2>
+  </div>
+</section>
+
+<script>
+// Target: Midnight September 28, 00:00:00 Bangladesh Time
+const target = new Date("2026-09-28T00:00:00+06:00").getTime();
+const $ = id => document.getElementById(id);
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
+  $(id).classList.add('active');
+}
+
+function tick() {
+  let diff = target - Date.now();
+  if (diff <= 0) {
+    if ($('count').classList.contains('active')) {
+      show('ready');
+    }
+    return;
+  }
+  let d = Math.floor(diff / 86400000);
+  diff %= 86400000;
+  let h = Math.floor(diff / 3600000);
+  diff %= 3600000;
+  let m = Math.floor(diff / 60000);
+  let s = Math.floor(diff / 1000) % 60;
+  
+  $('dd').textContent = String(d).padStart(2, '0');
+  $('hh').textContent = String(h).padStart(2, '0');
+  $('mm').textContent = String(m).padStart(2, '0');
+  $('ss').textContent = String(s).padStart(2, '0');
+}
+
+setInterval(tick, 1000);
+tick();
+
+function unlock() {
+  const input = $('pw').value.trim().toLowerCase();
+  if (input === 'tayeba') {
+    show('cakeSec');
+  } else {
+    $('err').textContent = 'Incorrect password! Try your wife\'s name ❤️';
+    $('pw').value = '';
+  }
+}
+
+function blow() {
+  document.querySelectorAll('.flame').forEach(f => f.style.display = 'none');
+  $('blow').style.display = 'none';
+  $('cut').style.display = 'inline-block';
+}
+
+function cut() {
+  $('cake').classList.add('cut');
+  setTimeout(() => show('giftSec'), 900);
+}
+
+/* Background Stars Animation */
+const c = $('stars'), ctx = c.getContext('2d');
+let W, H, pts = [];
+
+function resize() {
+  W = c.width = innerWidth * devicePixelRatio;
+  H = c.height = innerHeight * devicePixelRatio;
+  pts = Array.from({length: 130}, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    r: Math.random() * 1.5 + .3,
+    a: Math.random(),
+    v: Math.random() * .008 + .002
+  }));
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  pts.forEach(p => {
+    p.a += p.v;
+    if (p.a > 1 || p.a < .1) p.v *= -1;
+    ctx.globalAlpha = p.a * .65;
+    ctx.fillStyle = '#e7c77e';
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+
+addEventListener('resize', resize);
+resize();
+draw();
+</script>
+</body>
+</html>
